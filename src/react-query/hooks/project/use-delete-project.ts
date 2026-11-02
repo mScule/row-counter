@@ -5,15 +5,16 @@ type Payload = {
   id: string;
 };
 
-export function useDeleteCoffee() {
+export function useDeleteProject() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    scope: { id: "project" },
     mutationFn: async ({ id }: Payload) => {
-      return await deleteEntry("coffee", id);
+      return await deleteEntry("project", id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["coffee"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
     },
   });
 }

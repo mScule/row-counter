@@ -4,27 +4,27 @@ import {Button} from "@/shadcn/ui/button";
 import {FieldGroup} from "@/shadcn/ui/field";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/shadcn/ui/dialog";
 import type {WithId} from "@/types/with-id";
-import type {Brewer} from "@/types/brewer";
+import type {Project} from "@/types/project";
 import {TrashIcon} from "lucide-react";
-import {useDeleteBrewer} from "@/react-query/hooks/brewer/use-delete-brewer";
+import {useDeleteProject} from "@/react-query/hooks/project/use-delete-project";
 import {TypographyP} from "@/shadcn/typography/typography-p";
 
 type Props = {
-  brewer: WithId<Brewer>;
+  project: WithId<Project>;
 };
 
-export function BrewerDeletionForm({brewer}: Props) {
-  const deleteBrewer = useDeleteBrewer();
+export function ProjectDeletionForm({project}: Props) {
+  const deleteProject = useDeleteProject();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  async function submitDeleteBrewer() {
+  async function submitDeleteProject() {
     try {
-      await deleteBrewer.mutateAsync({id: brewer.id});
-      toast.success(`Brewer ${brewer.name} deleted`);
+      await deleteProject.mutateAsync({id: project.id});
+      toast.success(`Project ${project.name} deleted`);
       setIsOpen(false);
     } catch {
-      toast.error(`Error creating brewer`);
+      toast.error(`Error deleting project`);
     }
   }
 
@@ -37,14 +37,14 @@ export function BrewerDeletionForm({brewer}: Props) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update {brewer.name}</DialogTitle>
+          <DialogTitle>Delete {project.name}</DialogTitle>
         </DialogHeader>
 
         <FieldGroup>
           <TypographyP>
-            Do you want to delete <b className="text-destructive">{brewer.name}</b> ?
+            Do you want to delete <b className="text-destructive">{project.name}</b> ?
           </TypographyP>
-          <Button variant="outline" type="submit" onClick={submitDeleteBrewer}>
+          <Button variant="outline" type="submit" onClick={submitDeleteProject}>
             <span>Delete</span>
             <TrashIcon />
           </Button>

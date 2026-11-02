@@ -1,6 +1,6 @@
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useCreateBrewer} from "@/react-query/hooks/brewer/use-create-brewer";
+import {useCreateProject} from "@/react-query/hooks/project/use-create-project";
 import {toast} from "sonner";
 import {Field, FieldGroup, FieldLabel} from "@/shadcn/ui/field";
 import {Input} from "@/shadcn/ui/input";
@@ -9,42 +9,40 @@ import {Button} from "@/shadcn/ui/button";
 import z from "zod";
 import {useState} from "react";
 import {PlusIcon} from "lucide-react";
-import {PositiveIntegerSchema} from "@/form-value-schemas/positive-integer-schema";
 import {NameSchema} from "@/form-value-schemas/name-schema";
-import {CupInMlHint} from "../hints/cup-in-ml-hint";
 import {FieldError} from "../field-error";
+import {DEFAULT_COUNTER_COLOR} from "@/utils/counter-colors";
 
-const BrewerCreationFormSchema = z.object({
-  name: NameSchema,
-  cupInMillilitres: PositiveIntegerSchema
+const ProjectCreationFormSchema = z.object({
+  name: NameSchema
 });
 
-export function BrewerCreationForm() {
-  const createBrewer = useCreateBrewer();
+export function ProjectCreationForm() {
+  const createProject = useCreateProject();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(BrewerCreationFormSchema),
+    resolver: zodResolver(ProjectCreationFormSchema),
     defaultValues: {
-      name: "",
-      cupInMillilitres: ""
+      name: ""
     }
   });
 
-  async function submitCreateBrewer(brewer: z.infer<typeof BrewerCreationFormSchema>) {
+  async function submitCreateProject(project: z.infer<typeof ProjectCreationFormSchema>) {
     try {
-      const created = await createBrewer.mutateAsync({
-        brewer: {
-          name: brewer.name,
-          cupInMillilitres: Number(brewer.cupInMillilitres)
+      const created = await createProject.mutateAsync({
+        project: {
+          name: project.name,
+          counters: [{kind: "COUNTER", name: "Rows", count: 0, color: DEFAULT_COUNTER_COLOR}],
+          notes: ""
         }
       });
-      toast.success(`Brewer ${created.name} added`);
+      toast.success(`Project ${created.name} added`);
       form.reset();
       setIsOpen(false);
     } catch {
-      toast.error(`Error creating brewer`);
+      toast.error(`Error creating project`);
     }
   }
 
@@ -58,9 +56,9 @@ export function BrewerCreationForm() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a new brewer</DialogTitle>
+          <DialogTitle>Add a new project</DialogTitle>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(submitCreateBrewer)}>
+        <form onSubmit={form.handleSubmit(submitCreateProject)}>
           <FieldGroup>
             <Controller
               control={form.control}
@@ -69,21 +67,7 @@ export function BrewerCreationForm() {
                 <>
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>Name</FieldLabel>
-                    <Input placeholder="Acme Coffee Maker" {...field} />
-                  </Field>
-                  {fieldState.error && <FieldError message={fieldState.error.message} />}
-                </>
-              )}
-            />
-            <Controller
-              control={form.control}
-              name="cupInMillilitres"
-              render={({field, fieldState}) => (
-                <>
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Cup size in millilitres</FieldLabel>
-                    <CupInMlHint />
-                    <Input placeholder="For example 1.25ml is 125" {...field} />
+                    <Input placeholder="Wool socks" {...field} />
                   </Field>
                   {fieldState.error && <FieldError message={fieldState.error.message} />}
                 </>
