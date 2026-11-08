@@ -1,5 +1,6 @@
 import {useAppState} from "@/contexts/use-app-state";
 import {CounterList} from "@/components/lists/counter-list";
+import {CounterHistoryDialog} from "@/components/counter-history-dialog";
 import {ProjectNotes} from "@/components/project-notes";
 import {useQueryProject} from "@/react-query/hooks/project/use-query-project";
 import {TypographyH2} from "@/shadcn/typography/typography-h2";
@@ -21,10 +22,13 @@ export function ProjectView({id}: Props) {
         <div className="min-w-0 [overflow-wrap:anywhere]">
           <TypographyH2>{project.data?.name ?? "Project"}</TypographyH2>
         </div>
-        <Button variant="outline" onClick={openProjectList}>
-          <ArrowLeftIcon />
-          <span>Projects</span>
-        </Button>
+        <div className="flex flex-row gap-2 shrink-0">
+          <CounterHistoryDialog projectId={id} />
+          <Button variant="outline" onClick={openProjectList}>
+            <ArrowLeftIcon />
+            <span>Projects</span>
+          </Button>
+        </div>
       </div>
 
       {project.isSuccess && !project.data && <TypographyLead>Project not found</TypographyLead>}

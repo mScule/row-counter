@@ -21,6 +21,7 @@ export function CounterList({projectId, counters}: Props) {
     try {
       await updateCounters.mutateAsync({
         id: projectId,
+        label: `${counters[index].name} ${step > 0 ? "+" : "−"}${Math.abs(step)}`,
         update: counters => counters.map((counter, i) => (i === index ? stepCounter(counter, step) : counter))
       });
     } catch {
